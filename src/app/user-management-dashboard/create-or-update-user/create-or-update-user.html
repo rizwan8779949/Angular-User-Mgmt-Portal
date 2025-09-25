@@ -1,0 +1,61 @@
+<div class="internal-padding-modal">
+  <div class="dialog-icon">
+    <p class="text-">{{ data?.id ? 'Edit' : 'Create' }} User</p>
+  </div>
+  <div class="form-main-div">
+    <form [formGroup]="formGroup">
+      <mat-form-field appearance="outline" class="w-100 form-field-global">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+        <mat-error
+          *ngIf="
+            submitted &&
+            formControls['username'].errors &&
+            formControls['username'].errors['required']
+          "
+          >Username is required</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-100 form-field-global">
+        <mat-label>Email ID</mat-label>
+        <input matInput formControlName="email" />
+        <mat-error
+          *ngIf="
+            submitted && formControls['email'].errors && formControls['email'].errors['required']
+          "
+          >Email ID is required</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="w-100 form-field-global form-field-select">
+        <mat-label>Job Role</mat-label>
+
+        <mat-select formControlName="jobRole">
+          @for (role of allJobRole; track $index) {
+          <mat-option class="form-select-options" [value]="role?.value">{{
+            role?.name
+          }}</mat-option>
+          }
+        </mat-select>
+        <mat-error
+          *ngIf="
+            submitted &&
+            formControls['jobRole'].errors &&
+            formControls['jobRole'].errors['required']
+          "
+          >Job Role is required</mat-error
+        >
+      </mat-form-field>
+      <div class="text-end mb-3">
+        <button mat-raised-button (click)="closeModal()" class="me-3">Close</button>
+        <button
+          mat-raised-button
+          (click)="checkFormValidOrNot()"
+          color="primary"
+          [disabled]="isLoading"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

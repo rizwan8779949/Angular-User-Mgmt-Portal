@@ -1,0 +1,24 @@
+.mat-mdc-snack-bar-container {
+  .mdc-snackbar__surface {
+    background-color: transparent !important;
+    border-radius: 10px !important;
+  }
+  &.success-toaster {
+    background-color: #51a351 !important;
+    color: var(--secondaryColor);
+    border-radius: 10px !important;
+  }
+  &.error-toaster {
+    background-color: #bd362f !important;
+    color: var(--secondaryColor);
+    border-radius: 10px !important;
+  }
+  &.warning-toaster {
+    background-color: #f89406 !important;
+    color: var(--secondaryColor);
+    border-radius: 10px !important;
+  }
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+    color: #fff !important;
+  }
+}

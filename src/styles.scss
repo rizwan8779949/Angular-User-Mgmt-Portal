@@ -1,0 +1,108 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$magenta-palette,
+      tertiary: mat.$violet-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root {
+  /*Color*/
+  --primaryColor: #084886;
+  --secondaryColor: #fff;
+  --ternaryColor: #000000;
+}
+
+.common-height-auto {
+  height: auto;
+}
+
+.data-not-found {
+  color: var(--primaryColor);
+  font-size: 14px;
+  margin: 14px 0px 14px 0px;
+  text-align: center;
+}
+
+.internal-padding-modal {
+  padding: 0px 0px 0px 0px;
+  p.text- {
+    font-weight: 500;
+    padding: 15px;
+    background: #ebedf2;
+    color: var(--primaryColor);
+  }
+  .dialog-icon {
+    background-color: #ececec;
+  }
+  .close-icon {
+    float: right;
+    margin-top: -55px;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  .form-main-div {
+    margin: 20px 20px;
+  }
+}
+
+
+.form-field-global {
+  .mat-mdc-form-field-infix {
+    padding: 7px 0px 0px 0px !important;
+    min-height: 37px !important;
+    font-size: 13px !important;
+  }
+  .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+    top: 17px !important;
+    font-size: 14px !important;
+  }
+  .mat-mdc-text-field-wrapper
+    .mat-mdc-form-field-flex
+    .mdc-floating-label--float-above {
+    top: 28px !important;
+  }
+}
+.form-field-removed-subscription .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.form-select-options {
+  font-size: 13px !important;
+  min-height: 32px !important;
+}
+.form-field-select .mat-mdc-select-value {
+  font-size: 13px !important;
+}
