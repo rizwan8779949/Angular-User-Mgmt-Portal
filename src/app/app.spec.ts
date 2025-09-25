@@ -15,9 +15,10 @@ describe('App', () => {
   });
 
   it('should render title', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, User-Mgmt-NgRx');
-  });
+  const fixture = TestBed.createComponent(App);
+  fixture.detectChanges();
+  const compiled = fixture.nativeElement as HTMLElement;
+  const h1Text = compiled.querySelector('h1')?.textContent;
+  expect(h1Text).withContext(`Actual <h1>: ${h1Text}`).toContain('Hello, User-Mgmt-NgRx');
+});
 });
