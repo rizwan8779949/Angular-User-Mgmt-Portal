@@ -38,19 +38,17 @@ export class CommonConfirmationDialog {
 
   confirmDeleteUser() {
     this.isLoading = true;
-    this.api
-      .commanDeleteMethod('commercial/delete-air-commercial/' + this.data?.dialogData?._id)
-      .subscribe(
-        (data: any) => {
-          this.isLoading = false;
-          this.snackBar.success(`Commercial Config deleted successfully`);
-          this.matDialogRef.close(true);
-        },
-        (err: any) => {
-          this.isLoading = false;
-          this.snackBar.error(err?.error?.Message || 'Something went wrong');
-        }
-      );
+    this.api.commanDeleteMethod('deleteUser/' + this.data?.dialogData?.id).subscribe(
+      (data: any) => {
+        this.isLoading = false;
+        this.snackBar.success(`User deleted successfully`);
+        this.matDialogRef.close(true);
+      },
+      (err: any) => {
+        this.isLoading = false;
+        this.snackBar.error(err?.error?.Message || 'Something went wrong');
+      }
+    );
   }
   logoutMethod() {
     localStorage.clear();

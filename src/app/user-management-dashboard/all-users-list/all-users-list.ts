@@ -75,7 +75,7 @@ export class AllUsersList implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {
-        this.store.dispatch(userMgmtInitial()); // reload
+        this.store.dispatch(userMgmtInitial()); 
       }
     });
   }
@@ -93,7 +93,7 @@ export class AllUsersList implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {
-        this.store.dispatch(userMgmtInitial()); // reload
+        this.store.dispatch(userMgmtInitial()); 
       }
     });
   }

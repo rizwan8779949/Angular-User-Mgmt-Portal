@@ -12,13 +12,13 @@ export class CreateOrUpdateUserEffects {
   createOrUpdateUser$ = createEffect(() =>
     this.actions$.pipe(
       mergeMap((action) => {
-        const { email, password } = action;
+        const { email, username } = action;
 
-        if (!email || !password) {
+        if (!email || !username) {
           return of(userRespFailure({ error: 'Missing credentials' }));
         }
 
-        return this.api.commonPostMethod(email, password).pipe(
+        return this.api.commonPostMethod(email, username).pipe(
           map((response) =>
             userRespSuccess({ user: response?.Result })
           ),

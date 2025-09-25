@@ -1,29 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ApiService } from '../shared/services/api/api-service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SnackBarService } from '../shared/services/snack-bar-service';
 import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from "@angular/material/input";
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ApiService } from '../shared/services/api/api-service';
+import { SnackBarService } from '../shared/services/snack-bar-service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, MatButtonModule, MatInputModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule, 
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
-  providers: [ApiService, SnackBarService],
 })
 export class Login {
-  formGroup!: FormGroup;
+  formGroup: FormGroup;
   submitted = false;
   isLoading = false;
+
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
@@ -31,32 +32,32 @@ export class Login {
     private snackBarService: SnackBarService
   ) {
     this.formGroup = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
+
   checkLoginDetails() {
     this.submitted = true;
-    if (this.formGroup.invalid) return;
-    this.isLoading = true;
-    this.api.commonPostMethod('login',this.formGroup.value).subscribe(
-      (res: any) => {
-        this.submitted = false;
-        this.isLoading = false;
-        this.router.navigate(['/user-management-dashboard']);
-        this.snackBarService.success('Loggedin successfully');
-      },
-      (err: any) => {
-        localStorage.setItem('loggedInUserData',JSON.stringify(this.formGroup.value))
-        this.snackBarService.error(err?.error?.message ?? 'Please try again..!');
-        this.router.navigate(['/user-management-dashboard']);
-        this.submitted = false;
-        this.isLoading = false;
-      }
-    );
-  }
+    if (this.formGroup.invalid) {
+      return;
+    }
 
-  get formControls() {
-    return this.formGroup.controls;
+    this.isLoading = true;
+    const loginData = this.formGroup.value;
+
+    this.api.commonPostMethod('login', loginData).subscribe({
+      next: (res:any) => {
+        this.isLoading = false;
+        localStorage.setItem('loggedInUserData', JSON.stringify(res?.data));
+        this.router.navigate(['/user-management-dashboard']);
+        this.snackBarService.success('Logged in successfully');
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        const errorMessage = err?.error?.message ?? 'An error occurred. Please try again.';
+        this.snackBarService.error(errorMessage);
+      },
+    });
   }
 }
