@@ -4,22 +4,23 @@
   </div>
   <div class="form-main-div">
     <form [formGroup]="formGroup">
+      @if (!data?.id){
       <mat-form-field appearance="outline" class="w-100 form-field-global">
         <mat-label>Username</mat-label>
         <input matInput formControlName="username" />
         @if (submitted && formGroup.controls.username.hasError('required')) {
-          <mat-error>Username is required</mat-error>
+        <mat-error>Username is required</mat-error>
         }
       </mat-form-field>
+      }
 
       <mat-form-field appearance="outline" class="w-100 form-field-global">
         <mat-label>Email ID</mat-label>
         <input matInput formControlName="email" />
         @if (submitted && formGroup.controls.email.hasError('required')) {
-          <mat-error>Email ID is required</mat-error>
-        }
-        @if (submitted && formGroup.controls.email.hasError('email')) {
-          <mat-error>Invalid email format</mat-error>
+        <mat-error>Email ID is required</mat-error>
+        } @if (submitted && formGroup.controls.email.hasError('email')) {
+        <mat-error>Invalid email format</mat-error>
         }
       </mat-form-field>
 
@@ -27,11 +28,13 @@
         <mat-label>Job Role</mat-label>
         <mat-select formControlName="jobRole">
           @for (role of allJobRole; track $index) {
-            <mat-option class="form-select-options" [value]="role?.value">{{ role?.name }}</mat-option>
+          <mat-option class="form-select-options" [value]="role?.value">{{
+            role?.name
+          }}</mat-option>
           }
         </mat-select>
         @if (submitted && formGroup.controls.jobRole.hasError('required')) {
-          <mat-error>Job Role is required</mat-error>
+        <mat-error>Job Role is required</mat-error>
         }
       </mat-form-field>
 
@@ -44,9 +47,9 @@
           [disabled]="isLoading"
         >
           @if (isLoading) {
-            <span>Submitting...</span>
+          <span>Submitting...</span>
           } @else {
-            <span>Submit</span>
+          <span>Submit</span>
           }
         </button>
       </div>
