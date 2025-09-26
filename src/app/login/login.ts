@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SnackBarService } from '../shared/services/snack-bar-service';
 import { Store } from '@ngrx/store';
-import { AsyncPipe } from '@angular/common';
 import { isLoading, selectError, selectLoginResponse } from '../shared/ngrx/login/auth.selectors';
 import { login } from '../shared/ngrx/login/auth.actions';
 
@@ -41,24 +40,20 @@ export class Login {
   user$ = this.store.select(selectLoginResponse);
 
   constructor() {
-    effect(() => {
-      const user = this.user$;
-      user.subscribe((res) => {
-        if (res) {
-          localStorage.setItem('loggedInUserData', JSON.stringify(res));
-          this.snackBarService.success('Logged in successfully');
-          this.router.navigate(['/user-management-dashboard']);
-        }
-      });
+    // Subscribe directly to user$ observable
+    this.user$.subscribe((res) => {
+      if (res) {
+        localStorage.setItem('loggedInUserData', JSON.stringify(res));
+        this.snackBarService.success('Logged in successfully');
+        this.router.navigate(['/user-management-dashboard']);
+      }
     });
 
-    effect(() => {
-      const err = this.error$;
-      err.subscribe((error) => {
-        if (error) {
-          this.snackBarService.error(error);
-        }
-      });
+    // Subscribe directly to error$ observable
+    this.error$.subscribe((error) => {
+      if (error) {
+        this.snackBarService.error(error);
+      }
     });
   }
 
