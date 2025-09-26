@@ -53,9 +53,9 @@ export class CreateOrUpdateUser implements OnInit {
   ngOnInit(): void {
     if (this.data?.id) {
       this.formGroup.patchValue({
-        username: this.data?.username,
-        email: this.data?.email,
-        jobRole: this.data?.jobRole,
+        username: this.data?.username??"",
+        email: this.data?.email??"",
+        jobRole: this.data?.jobRole??"",
       });
     }
   }
