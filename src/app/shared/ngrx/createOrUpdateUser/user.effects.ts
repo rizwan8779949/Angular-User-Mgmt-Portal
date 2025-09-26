@@ -1,7 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap, map, catchError, of } from 'rxjs';
-import {  userRespFailure, userRespSuccess } from './user.actions';
+import { catchError, map, mergeMap, of } from 'rxjs';
+import {
+  createUser,
+  updateUser,
+  userRespFailure,
+  userRespSuccess,
+} from './user.actions';
 import { ApiService } from '../../services/api/api-service';
 
 @Injectable()
@@ -9,24 +14,31 @@ export class CreateOrUpdateUserEffects {
   private actions$ = inject(Actions);
   private api = inject(ApiService);
 
-  createOrUpdateUser$ = createEffect(() =>
+  createUser$ = createEffect(() =>
     this.actions$.pipe(
-      mergeMap((action) => {
-        const { email, username } = action;
-
-        if (!email || !username) {
-          return of(userRespFailure({ error: 'Missing credentials' }));
-        }
-
-        return this.api.commonPostMethod(email, username).pipe(
-          map((response) =>
-            userRespSuccess({ user: response?.Result })
-          ),
+      ofType(createUser),
+      mergeMap(({ payload }) =>
+        this.api.commonPostMethod('createUser', payload).pipe(
+          map((response) => userRespSuccess({ user: response?.data })),
           catchError((error) =>
-            of(userRespFailure({ error: error?.error?.Message || 'User create/update failed' }))
+            of(userRespFailure({ error: error?.error?.Message || 'Create user failed' }))
           )
-        );
-      })
+        )
+      )
+    )
+  );
+
+  updateUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateUser),
+      mergeMap(({ id, payload }) =>
+        this.api.commonPatchMethod(`updateUser/${id}`, payload).pipe(
+          map((response) => userRespSuccess({ user: response?.data })),
+          catchError((error) =>
+            of(userRespFailure({ error: error?.error?.Message || 'Update user failed' }))
+          )
+        )
+      )
     )
   );
 }

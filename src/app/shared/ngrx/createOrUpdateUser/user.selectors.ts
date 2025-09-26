@@ -1,7 +1,7 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CreateOrUpdateUserState } from './user.reducer';
 
-export const selectCreateOrUpdateUser = createFeatureSelector<CreateOrUpdateUserState>('auth');
+export const selectCreateOrUpdateUser = createFeatureSelector<CreateOrUpdateUserState>('createOrUpdateUser');
 
 export const isLoading = createSelector(
   selectCreateOrUpdateUser,

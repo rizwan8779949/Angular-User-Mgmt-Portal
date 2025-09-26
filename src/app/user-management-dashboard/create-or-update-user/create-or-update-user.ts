@@ -1,15 +1,17 @@
+import { Component, Inject, inject, OnInit, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ApiService } from '../../shared/services/api/api-service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SnackBarService } from '../../shared/services/snack-bar-service';
+import { isLoading, userRespSelector } from '../../shared/ngrx/createOrUpdateUser/user.selectors';
+import { createUser, resetUserState, updateUser } from '../../shared/ngrx/createOrUpdateUser/user.actions';
 
 @Component({
   selector: 'app-create-or-update-user',
@@ -27,21 +29,22 @@ import { SnackBarService } from '../../shared/services/snack-bar-service';
   styleUrls: ['./create-or-update-user.scss'],
 })
 export class CreateOrUpdateUser implements OnInit {
-  formGroup = inject(FormBuilder).nonNullable.group({
+  private fb = inject(FormBuilder);
+  private store = inject(Store);
+  private matDialogRef = inject(MatDialogRef<CreateOrUpdateUser>);
+  private snackBar = inject(SnackBarService);
+  private destroyRef = inject(DestroyRef);
+
+  formGroup = this.fb.group({
     username: ['', Validators.required],
-    email: ['', [Validators.email, Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
     jobRole: ['', Validators.required],
   });
-
-  private api = inject(ApiService);
-  private router = inject(Router);
-  private snackBar = inject(SnackBarService);
-  private matDialogRef: MatDialogRef<CreateOrUpdateUser> = inject(MatDialogRef);
 
   data = inject(MAT_DIALOG_DATA, { optional: true });
 
   submitted = false;
-  isLoading = false;
+  isLoading$ = this.store.select(isLoading);
 
   allJobRole = [
     { name: 'tech', value: 'tech' },
@@ -51,68 +54,48 @@ export class CreateOrUpdateUser implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.store.dispatch(resetUserState());
+
     if (this.data?.id) {
       this.formGroup.patchValue({
-        username: this.data?.username??"",
-        email: this.data?.email??"",
-        jobRole: this.data?.jobRole??"",
+        username: this.data?.username ?? '',
+        email: this.data?.email ?? '',
+        jobRole: this.data?.jobRole ?? '',
       });
     }
+
+    this.store
+      .select(userRespSelector)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        if (user) {
+          const msg = this.data?.id ? 'User updated successfully' : 'User created successfully';
+          this.snackBar.success(msg);
+          this.matDialogRef.close(true);
+        }
+      });
   }
 
   checkFormValidOrNot(): void {
     this.submitted = true;
+    if (this.formGroup.invalid) return;
 
-    if (this.formGroup.invalid) {
-      return;
-    }
+    const raw = this.formGroup.getRawValue();
 
-    if (this.data?.id) {
-      this.submitEditUserForm();
-    } else {
-      this.submitCreateUserForm();
-    }
+    const formValue = {
+      username: raw.username ?? '',
+      email: raw.email ?? '',
+      jobRole: raw.jobRole ?? '',
+    };
+
+    this.store.dispatch(
+      this.data?.id
+        ? updateUser({ id: this.data.id, payload: formValue })
+        : createUser({ payload: formValue })
+    );
   }
 
   closeModal(): void {
     this.matDialogRef.close();
-  }
-
-  submitCreateUserForm(): void {
-    this.isLoading = true;
-    this.api.commonPostMethod('createUser', this.formGroup.getRawValue()).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.snackBar.success('User created successfully');
-        this.matDialogRef.close(true);
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        this.snackBar.error(err?.error?.Message || 'Something went wrong');
-      },
-    });
-  }
-
-  submitEditUserForm(): void {
-    this.isLoading = true;
-    const payloadObj = {
-      email: this.formGroup.controls.email.value,
-      jobRole: this.formGroup.controls.jobRole.value,
-    };
-    this.api.commonPatchMethod(`updateUser/${this.data?.id}`, payloadObj).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.snackBar.success('User updated successfully');
-        this.matDialogRef.close(true);
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        this.snackBar.error(err?.error?.Message || 'Something went wrong');
-      },
-    });
-  }
-
-  goto(url: string): void {
-    this.router.navigate([url]);
   }
 }

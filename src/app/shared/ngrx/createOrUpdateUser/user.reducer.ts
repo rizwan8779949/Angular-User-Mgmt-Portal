@@ -1,5 +1,18 @@
-import { createReducer, on } from '@ngrx/store'
-import {  userRespFailure, userRespSuccess } from './user.actions';
+import { createReducer, on } from '@ngrx/store';
+import {
+  createUser,
+  updateUser,
+  userRespFailure,
+  userRespSuccess,
+  resetUserState,
+} from './user.actions';
+
+export interface User {
+  id: string;
+  email: string;
+  username: string;
+  jobRole: string;
+}
 
 export interface CreateOrUpdateUserState {
   user: User | null;
@@ -15,23 +28,21 @@ export const initialState: CreateOrUpdateUserState = {
 
 export const createOrUpdateReducer = createReducer(
   initialState,
+  on(createUser, updateUser, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
   on(userRespSuccess, (state, { user }) => ({
     ...state,
-    loading: false,
     user,
+    loading: false,
     error: null,
   })),
   on(userRespFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    user:null,
     error,
-  }))
+  })),
+  on(resetUserState, () => initialState)
 );
-
-export interface User{
-  id: string;
-  email: string;
-  username: string;
-  jobRole: string;
-}

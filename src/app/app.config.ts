@@ -14,8 +14,8 @@ import { UserMgmtEffects } from './shared/ngrx/allUserMgmt/user-mgmt.effects';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideStore({ userMgmt: userMgmtReducer }),
-    provideEffects([UserMgmtEffects]),
+    provideStore({ userMgmt: userMgmtReducer,createOrUpdateUser: createOrUpdateReducer }),
+    provideEffects([UserMgmtEffects,CreateOrUpdateUserEffects]),
     provideStoreDevtools({ maxAge: 25 }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

@@ -44,9 +44,9 @@
           mat-raised-button
           (click)="checkFormValidOrNot()"
           color="primary"
-          [disabled]="isLoading"
+          [disabled]="isLoading$|async"
         >
-          @if (isLoading) {
+          @if (isLoading$|async) {
           <span>Submitting...</span>
           } @else {
           <span>Submit</span>
