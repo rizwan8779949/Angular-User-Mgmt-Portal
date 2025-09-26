@@ -13,6 +13,7 @@ import { select, Store } from '@ngrx/store';
 import { userMgmtInitial } from '../../shared/ngrx/allUserMgmt/user-mgmt.actions';
 import { userMgmtError, userMgmtLoading, userMgmtSelector } from '../../shared/ngrx/allUserMgmt/user-mgmt.selectors';
 import { CommonConfirmationDialog } from '../../shared/components/common-confirmation-dialog/common-confirmation-dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-all-users-list',
@@ -23,6 +24,7 @@ import { CommonConfirmationDialog } from '../../shared/components/common-confirm
     MatCardModule,
     MatTableModule,
     MatDialogModule,
+    MatIconModule
   ],
   templateUrl: './all-users-list.html',
   styleUrl: './all-users-list.scss',
