@@ -9,10 +9,6 @@ import { loginInterface } from '../../models/login.model';
 export class ApiService {
   constructor(private http: HttpClient) {}
   baseUrl = 'http://localhost:3000/';
-  // loginApiMethod(loginObject: loginInterface): Observable<any> {
-  //   const endPoint = `${this.baseUrl}/user/login`;
-  //   return this.http.post(endPoint, { loginObject });
-  // }
   commonGetMethod(url: string, queryParams: any): Observable<any> {
     const endPoint = this.baseUrl + url;
     return this.http.get(endPoint, { params: queryParams });
