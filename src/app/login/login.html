@@ -6,14 +6,14 @@
         <mat-form-field appearance="outline" class="w-100 form-field-global mb-2">
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" />
-          @if (submitted && formGroup.get('username')?.hasError('required')) {
+          @if (submitted() && formGroup.get('username')?.hasError('required')) {
           <mat-error>Username is required</mat-error>
           }
         </mat-form-field>
         <mat-form-field appearance="outline" class="w-100 form-field-global">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" />
-          @if (submitted && formGroup.get('password')?.hasError('required')) {
+          @if (submitted() && formGroup.get('password')?.hasError('required')) {
           <mat-error>Password is required</mat-error>
           }
         </mat-form-field>
@@ -23,9 +23,9 @@
           (click)="checkLoginDetails()"
           color="primary"
           class="float-end"
-          [disabled]="isLoading"
+          [disabled]="loading$ | async"
         >
-          {{ isLoading ? 'Loading..' : 'Login' }}
+          {{ (loading$ | async) ? 'Loading..' : 'Login' }}
         </button>
       </form>
     </div>

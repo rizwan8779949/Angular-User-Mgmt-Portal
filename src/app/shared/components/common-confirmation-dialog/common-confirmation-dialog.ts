@@ -4,6 +4,9 @@ import { SnackBarService } from '../../services/snack-bar-service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { logout } from '../../ngrx/login/auth.actions';
+import { Store } from '@ngrx/store';
+
 
 @Component({
   selector: 'app-common-confirmation-dialog',
@@ -17,7 +20,8 @@ export class CommonConfirmationDialog {
     private snackBar: SnackBarService,
     private matDialogRef: MatDialogRef<CommonConfirmationDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private router: Router
+    private router: Router,
+    private store:Store
   ) {}
   isLoading = false;
   ngOnInit(): void {}
@@ -52,8 +56,9 @@ export class CommonConfirmationDialog {
   }
   logoutMethod() {
     localStorage.clear();
+    this.store.dispatch(logout());
     this.router.navigate(['/login']);
-    this.matDialogRef.close();
+    this.matDialogRef.close(); 
   }
 
   closeModal() {

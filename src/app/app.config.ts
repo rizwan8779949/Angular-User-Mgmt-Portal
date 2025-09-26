@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -10,15 +14,21 @@ import { CreateOrUpdateUserEffects } from './shared/ngrx/createOrUpdateUser/user
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { userMgmtReducer } from './shared/ngrx/allUserMgmt/user-mgmt.reducer';
 import { UserMgmtEffects } from './shared/ngrx/allUserMgmt/user-mgmt.effects';
+import { loginReducer } from './shared/ngrx/login/auth.reducer';
+import { AuthEffects } from './shared/ngrx/login/auth.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideStore({ userMgmt: userMgmtReducer,createOrUpdateUser: createOrUpdateReducer }),
-    provideEffects([UserMgmtEffects,CreateOrUpdateUserEffects]),
+    provideStore({
+      userMgmt: userMgmtReducer,
+      createOrUpdateUser: createOrUpdateReducer,
+      login: loginReducer,
+    }),
+    provideEffects([UserMgmtEffects, CreateOrUpdateUserEffects,AuthEffects]),
     provideStoreDevtools({ maxAge: 25 }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient() 
-  ]
+    provideHttpClient(),
+  ],
 };
